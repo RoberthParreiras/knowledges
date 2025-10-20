@@ -1,0 +1,17 @@
+services:
+  next:
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env.production
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
