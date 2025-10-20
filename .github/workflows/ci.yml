@@ -5,6 +5,9 @@ on: push
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./modular-hexagonal-architecture
     strategy:
       matrix:
         node-version: [20.x]
