@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Modular Hexagonal Architecture with Next.js
 
-## Getting Started
+This project is a practical example of how to implement a **Modular Hexagonal Architecture** in a **Next.js** application, bootstrapped with [`create-next-app`](<https://www.google.com/search?q=%5Bhttps://nextjs.org/docs/app/api-reference/cli/create-next-app%5D(https://nextjs.org/docs/app/api-reference/cli/create-next-app)>). It demonstrates a clean separation of concerns, making the codebase more maintainable, scalable, and testable. It also showcases the use of **Server Actions** for handling form submissions and data mutations.
 
-First, run the development server:
+## Architecture 🏛️
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project is built upon the principles of **Hexagonal Architecture** (also known as Ports and Adapters), which aims to isolate the application's core logic from external concerns. We've also incorporated the concept of **Modularity**, where the application is divided into independent and cohesive modules.
+
+### Core Concepts
+
+- **Domain:** This is the heart of the application. It contains the business logic, entities, and rules. It has no dependencies on any other layer.
+- **Application:** This layer orchestrates the use cases of the application. It depends on the domain layer and defines the interfaces (ports) that the infrastructure layer must implement.
+- **Infrastructure:** This layer contains the implementation details, such as databases, external services, and UI frameworks. It depends on the application layer and provides concrete implementations (adapters) for the defined ports.
+
+### Diagram
+
+```mermaid
+graph TD
+    subgraph " "
+        subgraph Infrastructure
+            A[Next.js UI] --> B{Application}
+            D[Prisma] --> B
+        end
+        subgraph "Core"
+            B --> C{Domain}
+        end
+    end
+
 ```
+## Where the Application Layer is Being Applied
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+In this project, the **application layer** is primarily applied within the **Next.js `page.tsx` files** located in the `src/app` directory. These pages act as the **primary adapters**, orchestrating the application's use cases by calling Server Actions, which in turn interact with the domain services.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For example, in `src/app/products/add/page.tsx`, the form submission is handled by a Server Action that utilizes the `ProductService` to create a new product. This demonstrates the separation of concerns, where the UI (the page) is decoupled from the business logic (the domain service).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Directory Structure 📂
 
-## Learn More
+The project is organized into the following main directories:
 
-To learn more about Next.js, take a look at the following resources:
+- **`src/app`**: This is the entry point of the Next.js application, which acts as the **primary adapter**. The `page.tsx` files within this directory are responsible for handling user interactions, presenting data, and orchestrating the application's use cases.
+- **`src/common`**: This directory contains shared components, libraries, and utilities that are used across the application.
+  - **`lib/actions`**: This is where the **Server Actions** are defined. They handle form submissions and data mutations on the server-side, ensuring a clean separation of concerns and a seamless user experience.
+- **`src/modules`**: This is where the core logic of the application resides. Each sub-directory represents a **module** with its own domain, application, and infrastructure layers.
+  - **`products/`**: An example module that manages products.
+    - **`domain/`**: Contains the product entity, repository interface, and domain service.
+    - **`infrastructure/`**: Provides concrete implementations for the repository interface, such as a Prisma-based repository and an in-memory repository for testing.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Bun
+- Docker
 
-## Deploy on Vercel
+### Installation & Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1.  **Clone the repo**
+    ```sh
+    git clone https://github.com/roberthparreiras/knowledges.git
+    ```
+2.  **Navigate to the project directory**
+    ```sh
+    cd modular-hexagonal-architecture
+    ```
+3.  **Install dependencies**
+    ```sh
+    bun install
+    ```
+4.  **Set up environment variables**
+    - Create a `.env.local` file by copying the example:
+      ```sh
+      cp .env.local.example .env.local
+      ```
+5.  **Run the development environment**
+    ```sh
+    docker compose -f docker-compose.dev.yml --env-file .env.local up -d --build
+    ```
+6.  **Apply database migrations**
+    ```sh
+    bunx prisma migrate dev
+    ```
+7.  **Seed the database**
+    ```sh
+    bun run seed
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Running Tests 🧪
+
+To run the tests, use the following command:
+
+```sh
+bun run test
+```
