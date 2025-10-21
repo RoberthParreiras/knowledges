@@ -10,6 +10,7 @@ import { ProductService } from "@/modules/products/domain/product-service";
 import { inMemoryProductRepository } from "@/modules/products/infrastructure/in-memory-product-repository";
 import { PrismaProductRepository } from "@/modules/products/infrastructure/prisma-product-repository";
 import { revalidatePath } from "next/cache";
+import { authAction, authFormAction } from "./auth-wrapper";
 
 // const productRepository = new inMemoryProductRepository();
 const productRepository = new PrismaProductRepository();
@@ -20,29 +21,31 @@ const addProductSchema = productSchema.omit({ id: true });
 export async function getAllProductsAction() {
   try {
     const products: Product[] = await productService.getProducts();
-    return { message: "Success: fetched all the products", products: products };
+    return {
+      message: "Success: fetched all the products",
+      products: products,
+      success: true,
+    };
   } catch (error) {
     Sentry.captureException(error);
     return { message: "An unexpected error occurred" };
   }
 }
 
-export async function deleteProductAction({
-  productId,
-}: {
-  productId: string;
-}) {
+export async function deleteProduct({ productId }: { productId: string }) {
   try {
     await productService.deleteProduct(productId);
     revalidatePath("/products");
-    return { message: "Success: product deleted" };
+    return { message: "Success: product deleted", success: true };
   } catch (error) {
     Sentry.captureException(error);
     return { message: "An unexpected error occurred" };
   }
 }
 
-export async function addProductAction(prevState: any, formData: FormData) {
+export const deleteProductAction = authAction(deleteProduct);
+
+async function addProduct(prevState: any, formData: FormData) {
   try {
     const rawData = Object.fromEntries(formData.entries());
     const dataToValidate = {
@@ -61,3 +64,5 @@ export async function addProductAction(prevState: any, formData: FormData) {
     return { message: "An unexpected error occurred" };
   }
 }
+
+export const addProductAction = authFormAction(addProduct);
