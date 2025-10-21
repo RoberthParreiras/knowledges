@@ -2,7 +2,7 @@
 
 This project is a practical example of how to implement a **Modular Hexagonal Architecture** in a **Next.js** application, bootstrapped with [`create-next-app`](<https://www.google.com/search?q=%5Bhttps://nextjs.org/docs/app/api-reference/cli/create-next-app%5D(https://nextjs.org/docs/app/api-reference/cli/create-next-app)>). It demonstrates a clean separation of concerns, making the codebase more maintainable, scalable, and testable. It also showcases the use of **Server Actions** for handling form submissions and data mutations.
 
-## Architecture 🏛️
+## Architecture
 
 This project is built upon the principles of **Hexagonal Architecture** (also known as Ports and Adapters), which aims to isolate the application's core logic from external concerns. We've also incorporated the concept of **Modularity**, where the application is divided into independent and cohesive modules.
 
@@ -33,7 +33,7 @@ In this project, the **application layer** is primarily applied within the **Nex
 
 For example, in `src/app/products/add/page.tsx`, the form submission is handled by a Server Action that utilizes the `ProductService` to create a new product. This demonstrates the separation of concerns, where the UI (the page) is decoupled from the business logic (the domain service).
 
-## Directory Structure 📂
+## Directory Structure
 
 The project is organized into the following main directories:
 
@@ -84,7 +84,7 @@ The project is organized into the following main directories:
 
 ---
 
-## Running Tests 🧪
+## Running Tests
 
 To run the tests, use the following command:
 
