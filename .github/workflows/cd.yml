@@ -1,0 +1,38 @@
+name: CD Pipeline
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            PARENTAL_DIR="/var/www"
+            PROJECT_DIR="/var/www/modular-hexagonal-architecture"
+
+            sudo mkdir -p $PARENT_DIR
+            sudo chown -R $USER:$USER $PARENT_DIR
+
+            # check if the project directory exists
+            if [ -d "$PROJECT_DIR" ]; then
+              echo "Project directory exists. Pulling latest changes."
+              cd $PROJECT_DIR
+              git config --global --add safe.directory $PROJECT_DIR
+              git pull origin main
+            else
+              echo "Project directory does not exist. Cloning repository."
+              git clone https://github.com/RoberthParreiras/knowledges
+              cd $PROJECT_DIR
+            fi
+
+            docker compose -f docker-compose-prod.yml --env-file .env.production up --build
