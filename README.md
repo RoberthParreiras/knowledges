@@ -1,5 +1,3 @@
-# knowledges
-
 This repository serves as my personal knowledge dump.
 
 ## What's Inside?
