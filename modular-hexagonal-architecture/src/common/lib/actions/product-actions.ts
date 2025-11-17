@@ -32,6 +32,7 @@ export async function getAllProductsAction() {
   }
 }
 
+
 export async function deleteProduct({ productId }: { productId: string }) {
   try {
     await productService.deleteProduct(productId);

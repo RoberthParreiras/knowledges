@@ -2,6 +2,7 @@
 
 import { deleteProductAction } from "@/common/lib/actions/product-actions";
 import { Product } from "@/modules/products/domain/product-schema";
+import CheckoutButton from "@/common/components/slots/button-checkout";
 
 export default function Products({
   productList,
@@ -20,6 +21,7 @@ export default function Products({
                 Price: ${product.price.toFixed(2)}
               </p>
               <p className="text-gray-700">Inventory: {product.inventory}</p>
+              <CheckoutButton productInfo={product} />
               <button
                 className="text-red-700"
                 type="button"
