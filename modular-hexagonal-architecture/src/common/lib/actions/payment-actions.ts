@@ -1,55 +1,22 @@
 "use server";
 
 import * as Sentry from "@sentry/nextjs";
-import Stripe from "stripe";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
-import {
-  Product,
-  productSchema,
-} from "@/modules/products/domain/product-schema";
+import { Product } from "@/modules/products/domain/product-schema";
+import { MercadoPagoGateway } from "@/modules/payment/infrastructure/mercado-pago-gateway";
+import { PaymentService } from "@/modules/payment/domain/payment-service";
+import { StripeGateway } from "@/modules/payment/infrastructure/stripe-gateway";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+// const apiGateway = new StripeGateway()
+const apiGateway = new MercadoPagoGateway();
+const apiGatewayClient = new PaymentService(apiGateway);
 
-const addCheckout = productSchema.omit({ id: true, inventory: true });
-
-export async function addCheckoutSession(productInfo: Product) {
+export default async function addCheckoutSessionAction(productInfo: Product) {
   try {
-    const validatedData = addCheckout.parse(productInfo);
-
-    const origin = (await headers()).get("origin");
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "boleto"],
-      line_items: [
-        {
-          price_data: {
-            currency: "brl",
-            product_data: {
-              name: validatedData.name,
-            },
-            unit_amount: validatedData.price * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      payment_method_options: {
-        card: {
-          installments: {
-            enabled: true,
-          },
-        },
-      },
-      mode: "payment",
-      allow_promotion_codes: true,
-      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/cancel`,
-    });
-
-    if (session.url) {
-      redirect(session.url);
-    }
+    const session = await apiGatewayClient.addPaymentCheckoutSession(
+      productInfo
+    );
+    return session;
   } catch (error: any) {
     if (error.digest?.startsWith("NEXT_REDIRECT")) {
       throw error;
@@ -59,10 +26,11 @@ export async function addCheckoutSession(productInfo: Product) {
   }
 }
 
-export async function getCheckoutSession(sessionId: string) {
-  const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-  return {
-    customerName: session.customer_details?.name,
-  };
+export async function getCheckoutSessionAction(sessionId: string) {
+  try {
+    const session = await apiGatewayClient.getPaymentCheckoutSession(sessionId);
+    return session;
+  } catch (error) {
+    console.log("Error", error);
+  }
 }

@@ -32,6 +32,19 @@ export async function getAllProductsAction() {
   }
 }
 
+export async function getProductAction({ productId }: { productId: string }) {
+  try {
+    const product = await productService.getProduct(productId);
+    return {
+      message: "Success: fetched the product",
+      product: product,
+      success: true,
+    };
+  } catch (error) {
+    Sentry.captureException(error);
+    return { message: "An unexpected error occurred" };
+  }
+}
 
 export async function deleteProduct({ productId }: { productId: string }) {
   try {

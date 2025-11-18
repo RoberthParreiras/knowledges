@@ -14,7 +14,7 @@ export default async function Success({
   return (
     <div>
       <h1>Payment successful</h1>
-      <p>Congratulation {checkoutSession.customerName}</p>
+      <p>Congratulation {checkoutSession?.customerName}</p>
     </div>
   );
 }

@@ -4,6 +4,10 @@ import { Product } from "./product-schema";
 export class ProductService {
   constructor(private productRepository: IProductRepository) {}
 
+  async getProduct(productId: string): Promise<Product> {
+    return await this.productRepository.get(productId);
+  }
+
   async getProducts(): Promise<Product[]> {
     return await this.productRepository.getAll();
   }
