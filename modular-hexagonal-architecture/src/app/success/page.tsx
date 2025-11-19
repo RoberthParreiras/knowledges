@@ -1,4 +1,5 @@
-import { getCheckoutSession } from "@/common/lib/actions/payment-actions";
+import { getCheckoutSessionAction } from "@/common/lib/actions/payment-actions";
+import { redirect } from "next/navigation";
 
 export default async function Success({
   searchParams,
@@ -6,10 +7,12 @@ export default async function Success({
   searchParams: { session_id?: string };
 }) {
   if (!searchParams.session_id) {
-    throw new Error("Please provide a valid session_id");
+    redirect("/");
   }
 
-  const checkoutSession = await getCheckoutSession(searchParams.session_id);
+  const checkoutSession = await getCheckoutSessionAction(
+    searchParams.session_id
+  );
 
   return (
     <div>

@@ -12,6 +12,14 @@ This project is built upon the principles of **Hexagonal Architecture** (also kn
 - **Application:** This layer orchestrates the use cases of the application. It depends on the domain layer and defines the interfaces (ports) that the infrastructure layer must implement.
 - **Infrastructure:** This layer contains the implementation details, such as databases, external services, and UI frameworks. It depends on the application layer and provides concrete implementations (adapters) for the defined ports.
 
+## Integrations
+
+This project integrates with several third-party services, which are treated as part of the infrastructure layer:
+
+- **[Clerk](https://clerk.com/):** Used for user authentication and management, providing a complete solution for sign-up, sign-in, and user profile management.
+- **[Stripe](https://stripe.com/):** A payment processing platform used to handle online payments securely.
+- **[Mercado Pago](https://www.mercadopago.com/):** Another payment platform, particularly popular in Latin America, providing an alternative for payment processing.
+
 ### Diagram
 
 ```mermaid
@@ -27,6 +35,7 @@ graph TD
     end
 
 ```
+
 ## Where the Application Layer is Being Applied
 
 In this project, the **application layer** is primarily applied within the **Next.js `page.tsx` files** located in the `src/app` directory. These pages act as the **primary adapters**, orchestrating the application's use cases by calling Server Actions, which in turn interact with the domain services.
