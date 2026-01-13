@@ -4,7 +4,7 @@
 echo "Database is ready, running migrations..."
 
 # Apply database migrations
-bunx prisma migrate dev --schema=./src/common/lib/prisma/schema.prisma
+cd src/common/lib/prisma && bunx prisma migrate dev
 
 echo "Migrations complete, starting application..."
 
