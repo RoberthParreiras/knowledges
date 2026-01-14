@@ -22,24 +22,45 @@ services:
       timeout: 5s
       retries: 5
 
-  next:
-    build:
-      context: .
-      dockerfile: dev.Dockerfile
+  # next:
+  #   build:
+  #     context: .
+  #     dockerfile: dev.Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   env_file:
+  #     - ./.env.local
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #     - /app/.next
+  #   networks:
+  #     - app-network
+
+  uptime_kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: always
     ports:
-      - "3000:3000"
-    env_file:
-      - ./.env.local
+      - "3001:3001"
     volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
+      - uptime_kuma:/var/lib/uptime_kuma/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - app-network
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
 
 networks:
   app-network:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1350"
 
 volumes:
   postgres_data:
+  uptime_kuma:
