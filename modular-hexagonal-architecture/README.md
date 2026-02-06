@@ -20,6 +20,13 @@ This project integrates with several third-party services, which are treated as 
 - **[Stripe](https://stripe.com/):** A payment processing platform used to handle online payments securely.
 - **[Mercado Pago](https://www.mercadopago.com/):** Another payment platform, particularly popular in Latin America, providing an alternative for payment processing.
 
+### Providers
+
+This project contain third-party providers for error monitoring, observability and feature flags:
+
+- **[Sentry](https://sentry.io/):** An error monitoring and performance tracking platform that provides real-time insights into application errors, crashes, and performance issues across both edge and server environments.
+- **[LaunchDarkly](https://launchdarkly.com/):** A feature management platform that enables feature flags and toggles, allowing dynamic control of feature releases and experimentation without deploying new code.
+
 ### Diagram
 
 ```mermaid

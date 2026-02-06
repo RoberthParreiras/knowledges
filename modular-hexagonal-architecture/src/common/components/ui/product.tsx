@@ -2,7 +2,6 @@
 
 import { deleteProductAction } from "@/common/lib/actions/product-actions";
 import { Product } from "@/modules/products/domain/product-schema";
-import { ReactNode } from "react";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (

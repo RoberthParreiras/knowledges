@@ -44,7 +44,8 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - uptime_kuma:/var/lib/uptime_kuma/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - uptime_kuma:/app/data
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
