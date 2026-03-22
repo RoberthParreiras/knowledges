@@ -1,0 +1,1 @@
+This repo contains an architectural implemention of a Front-end (not implemented yet) with a Back-end running .NET. At this moment, only the Clean Architecture was implemented, in the future, there will be a Hexagonal (Ports and Adapters) architecture implementation.
