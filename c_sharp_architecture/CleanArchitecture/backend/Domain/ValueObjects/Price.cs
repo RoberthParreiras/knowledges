@@ -20,7 +20,10 @@ public record Price
 
         if (priceValue > 100_000m)
         {
-            throw new ArgumentOutOfRangeException(nameof(priceValue), "Value must be greater than R$100.000");
+            throw new ArgumentOutOfRangeException(
+                nameof(priceValue),
+                "Value must be less than R$100.000"
+            );
         }
 
         if (decimal.Round(priceValue, 2) != priceValue)

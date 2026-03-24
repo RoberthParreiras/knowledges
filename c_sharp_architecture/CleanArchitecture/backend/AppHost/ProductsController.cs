@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
-using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Application.DTO;
 using CleanArchitecture.Application.Services;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -18,7 +16,11 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Create(CreateProductRequest request)
     {
-        await _productService.CreateProductAsync(request.Name, request.Price, request.StockQuantity);
+        await _productService.CreateProductAsync(
+            request.Name,
+            request.Price,
+            request.StockQuantity
+        );
 
         return Ok();
     }
@@ -29,7 +31,10 @@ public class ProductsController : ControllerBase
         var products = await _productService.GetProductsAsync();
 
         var res = products.Select(product => new ProductResponse(
-            product.Id, product.Name, product.Price, product.StockQuantity
+            product.Id,
+            product.Name,
+            product.Price,
+            product.StockQuantity
         ));
 
         return Ok(res);

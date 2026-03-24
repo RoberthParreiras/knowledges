@@ -1,9 +1,6 @@
 using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Domain.ValueObjects;
 using CleanArchitecture.Domain.Repositories;
-using System.Security.Cryptography.X509Certificates;
-using System.Runtime.CompilerServices;
-using System.Collections;
+using CleanArchitecture.Domain.ValueObjects;
 
 namespace CleanArchitecture.Application.Services;
 
@@ -18,7 +15,11 @@ public class ProductService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task CreateProductAsync(string productName, decimal productPrice, int productStockQuantity)
+    public async Task CreateProductAsync(
+        string productName,
+        decimal productPrice,
+        int productStockQuantity
+    )
     {
         var name = new Name(productName);
         var price = new Price(productPrice);

@@ -14,7 +14,10 @@ public record StockQuantity
     {
         if (stockQuantity < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(stockQuantity), "Stock cannot be negative");
+            throw new ArgumentOutOfRangeException(
+                nameof(stockQuantity),
+                "Stock cannot be negative"
+            );
         }
     }
 

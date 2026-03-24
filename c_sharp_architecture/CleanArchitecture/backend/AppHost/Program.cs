@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Infrastructure.Data;
-using CleanArchitecture.Application.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,10 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")).UseSnakeCaseNamingConvention());
+    options
+        .UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
+        .UseSnakeCaseNamingConvention()
+);
 
 var app = builder.Build();
 app.MapControllers();
