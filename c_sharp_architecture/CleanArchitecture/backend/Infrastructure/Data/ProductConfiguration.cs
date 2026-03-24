@@ -15,7 +15,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasConversion(
                 name => name.PersonName,
                 value => new Name(value))
-            .HasColumnName("Name")
             .HasMaxLength(120)
             .IsRequired();
 
@@ -23,17 +22,16 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasConversion(
                 price => price.Value,
                 value => new Price(value))
-            .HasColumnName("Price")
-            .HasPrecision(18, 2);
+            .HasPrecision(18, 2)
+            .IsRequired();
 
         builder.Property(p => p.StockQuantity)
             .HasConversion(
                 stock => stock.Value,
                 value => new StockQuantity(value))
-            .HasColumnName("StockQuantity");
+            .IsRequired();
 
         builder.Property(p => p.CreatedAt)
-            .HasColumnName("CreatedAt")
             .IsRequired();
     }
 }
