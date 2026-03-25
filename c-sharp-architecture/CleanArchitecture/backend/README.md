@@ -22,3 +22,15 @@ After this, build and run the application:
 ```sh
 dotnet run --project CleanArchitecture/backend/AppHost/
 ```
+
+## How to test
+Using the Nunit for unit tests, in the backend directory, run:
+```sh
+dotnet test
+```
+
+## How to format the code
+Using the csharpier for code formatter, in the backend directory, run:
+```sh
+dotnet csharpier format .
+```

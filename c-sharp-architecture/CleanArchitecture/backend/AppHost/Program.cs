@@ -2,6 +2,9 @@ using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using DotNetEnv;
+
+Env.TraversePath().Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         .UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
         .UseSnakeCaseNamingConvention()
 );
+
+builder.WebHost.UseSentry();
 
 var app = builder.Build();
 app.MapControllers();
