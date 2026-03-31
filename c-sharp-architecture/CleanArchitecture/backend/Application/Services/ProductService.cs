@@ -1,6 +1,9 @@
+using CleanArchitecture.Application.Models;
+using CleanArchitecture.Application.Validations;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Domain.ValueObjects;
+using FluentValidation;
 
 namespace CleanArchitecture.Application.Services;
 
@@ -8,22 +11,31 @@ public class ProductService
 {
     private readonly IProductRepository _productRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ProductValidator _productValidator;
 
-    public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
+    public ProductService(
+        IProductRepository productRepository,
+        IUnitOfWork unitOfWork,
+        ProductValidator productValidator
+    )
     {
         _productRepository = productRepository;
         _unitOfWork = unitOfWork;
+        _productValidator = productValidator;
     }
 
-    public async Task CreateProductAsync(
-        string productName,
-        decimal productPrice,
-        int productStockQuantity
-    )
+    public async Task CreateProductAsync(CreateProductRequest data)
     {
-        var name = new Name(productName);
-        var price = new Price(productPrice);
-        var stockQuantity = new StockQuantity(productStockQuantity);
+        var res = await _productValidator.ValidateAsync(data);
+
+        if (!res.IsValid)
+        {
+            throw new ValidationException(res.Errors);
+        }
+
+        var name = new Name(data.Name);
+        var price = new Price(data.Price);
+        var stockQuantity = new StockQuantity(data.StockQuantity);
 
         var product = new Product(name, price, stockQuantity);
 

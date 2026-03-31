@@ -1,3 +1,5 @@
+using CleanArchitecture.Domain.Constants;
+
 namespace CleanArchitecture.Domain.ValueObjects;
 
 public record Price
@@ -13,22 +15,27 @@ public record Price
 
     private static void Validate(decimal priceValue)
     {
-        if (priceValue < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(priceValue), "Value cannot be negative.");
-        }
-
-        if (priceValue > 100_000m)
+        if (priceValue < DomainProduct.MinPriceValue)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(priceValue),
-                "Value must be less than R$100.000"
+                $"Value must be greater than {DomainProduct.MinPriceValue}."
             );
         }
 
-        if (decimal.Round(priceValue, 2) != priceValue)
+        if (priceValue > DomainProduct.MaxPriceValue)
         {
-            throw new ArgumentException("Value cannot contains more than 2 decimal places");
+            throw new ArgumentOutOfRangeException(
+                nameof(priceValue),
+                $"Value must be less than {DomainProduct.MaxPriceValue}"
+            );
+        }
+
+        if (decimal.Round(priceValue, DomainProduct.PriceScale) != priceValue)
+        {
+            throw new ArgumentException(
+                $"Value cannot contain more than {DomainProduct.PriceScale} decimal places"
+            );
         }
     }
 

@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Application.DTO;
+namespace CleanArchitecture.Application.Models;
 
 public record CreateProductRequest(string Name, decimal Price, int StockQuantity);
 

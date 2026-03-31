@@ -1,8 +1,10 @@
+using CleanArchitecture.AppHost;
 using CleanArchitecture.Application.Services;
+using CleanArchitecture.Application.Validations;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 
 Env.TraversePath().Load();
 
@@ -15,15 +17,20 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ProductValidator>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options
         .UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
         .UseSnakeCaseNamingConvention()
 );
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
-builder.WebHost.UseSentry();
+// builder.WebHost.UseSentry();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 app.MapControllers();
 
 app.Run();

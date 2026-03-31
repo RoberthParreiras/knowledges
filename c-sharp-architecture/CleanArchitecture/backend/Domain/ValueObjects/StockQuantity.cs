@@ -1,3 +1,5 @@
+using CleanArchitecture.Domain.Constants;
+
 namespace CleanArchitecture.Domain.ValueObjects;
 
 public record StockQuantity
@@ -12,11 +14,19 @@ public record StockQuantity
 
     private static void Validate(int stockQuantity)
     {
-        if (stockQuantity < 0)
+        if (stockQuantity < DomainProduct.MinStockQuantityValue)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(stockQuantity),
-                "Stock cannot be negative"
+                $"Value cannot be less than {DomainProduct.MinStockQuantityValue}"
+            );
+        }
+
+        if (stockQuantity > DomainProduct.MaxStockQuantityValue)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(stockQuantity),
+                $"Value cannot be greater than {DomainProduct.MaxStockQuantityValue}"
             );
         }
     }

@@ -1,4 +1,4 @@
-using CleanArchitecture.Application.DTO;
+using CleanArchitecture.Application.Models;
 using CleanArchitecture.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +16,7 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Create(CreateProductRequest request)
     {
-        await _productService.CreateProductAsync(
-            request.Name,
-            request.Price,
-            request.StockQuantity
-        );
+        await _productService.CreateProductAsync(request);
 
         return Ok();
     }
