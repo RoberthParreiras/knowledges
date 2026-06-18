@@ -1,4 +1,6 @@
+using CleanArchitecture.Application.Models;
 using CleanArchitecture.Application.Services;
+using CleanArchitecture.Application.Validations;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Domain.ValueObjects;
@@ -12,13 +14,17 @@ public class ProductsService
     private ProductService _productService = null!;
     private Mock<IProductRepository> _productRepository = null!;
     private Mock<IUnitOfWork> _unitOfWork = null!;
+    private Mock<ProductValidator> _productValidator = null;
+    private readonly CreateProductRequest _productRequest = new CreateProductRequest("Test Product", 11m, 1);
 
     [SetUp]
     public void SetUp()
     {
         _productRepository = new Mock<IProductRepository>();
         _unitOfWork = new Mock<IUnitOfWork>();
-        _productService = new ProductService(_productRepository.Object, _unitOfWork.Object);
+        _productValidator = new Mock<ProductValidator>();
+
+        _productService = new ProductService(_productRepository.Object, _unitOfWork.Object, _productValidator.Object);
     }
 
     [Test]
@@ -33,7 +39,7 @@ public class ProductsService
 
         _unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
-        await _productService.CreateProductAsync("Test Product", 11m, 1);
+        await _productService.CreateProductAsync(_productRequest);
 
         Assert.Multiple(() =>
         {
